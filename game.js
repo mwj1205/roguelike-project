@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
-import { Player, Monster } from '.class.js';
+import { Player, Monster } from './class.js';
 
 // setTimeout 편하게 쓰기 위한 함수
 function waitSecond(time) {
