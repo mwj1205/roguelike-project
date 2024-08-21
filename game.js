@@ -1,23 +1,64 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
 
-class Player {
-  constructor() {
-    this.hp = 100;
+class BaseStat {
+  constructor(hp, attack) {
+    this._hp = hp;
+    this._atk = attack;
   }
 
-  attack() {
-    // 플레이어의 공격
+  attack(target) {
+    // 공격
+    target.hit(this.atk);
+  }
+
+  hit(dmg) {
+    // 피격
+    this.hp -= dmg;
+  }
+
+  get atk() {
+    return this._atk;
+  }
+
+  set atk(atk) {
+    this._atk = atk;
+  }
+
+  get hp() {
+    return this._hp;
+  }
+  
+  set hp(hp) {
+    if(hp < 0)
+      this._hp = 0;
+    else this._hp = hp;
   }
 }
 
-class Monster {
+class Player extends BaseStat {
   constructor() {
-    this.hp = 100;
+    super(100, 20);
   }
 
-  attack() {
-    // 몬스터의 공격
+  specialattack() {
+
+  }
+
+  heal() {
+
+  }
+}
+
+class Monster extends BaseStat {
+  constructor(stage) {
+    let Hp = 50 + stage * 10;
+    let Atk = 10 + stage * 5;
+    if(stage === 10){
+      Hp *= 1.5;
+      Atk *= 1.3;
+    }
+    super(Hp, Atk);
   }
 }
 
@@ -26,10 +67,10 @@ function displayStatus(stage, player, monster) {
   console.log(
     chalk.cyanBright(`| Stage: ${stage} `) +
     chalk.blueBright(
-      `| 플레이어 정보`,
+      `| 플레이어 정보 HP: ${player.hp}, ATK: ${player.atk} `,
     ) +
     chalk.redBright(
-      `| 몬스터 정보 |`,
+      `| 몬스터 정보 HP: ${monster.hp}, ATK: ${monster.atk} |`,
     ),
   );
   console.log(chalk.magentaBright(`=====================\n`));
@@ -37,8 +78,9 @@ function displayStatus(stage, player, monster) {
 
 const battle = async (stage, player, monster) => {
   let logs = [];
+  let turns = 0;
 
-  while(player.hp > 0) {
+  while (player.hp > 0) {
     console.clear();
     displayStatus(stage, player, monster);
 
@@ -53,9 +95,23 @@ const battle = async (stage, player, monster) => {
     const choice = readlineSync.question('');
 
     // 플레이어의 선택에 따라 다음 행동 처리
-    logs.push(chalk.green(`${choice}를 선택하셨습니다.`));
+    switch (choice) {
+      case '1': // 공격
+        player.attack(monster);
+        logs.push(chalk.green(`[${turns}] 플레이어의 일반 공격! ${player.atk} 데미지를 입혔습니다!`));
+        break;
+      default:
+        logs.push(chalk.gray(`올바른 값을 선택해 주세요.`));
+        continue;
+    }
+
+    // 몬스터 공격
+    monster.attack(player);
+    logs.push(chalk.red(`[${turns}] 몬스터의 일반 공격! ${monster.atk} 데미지를 입었습니다!`));
+
+    ++turns;
   }
-  
+
 };
 
 export async function startGame() {
