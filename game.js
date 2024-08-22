@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
-import { Player, Monster } from './class.js';
+import { Player, Monster } from './classes.js';
 
 // setTimeout 편하게 쓰기 위한 함수
 function waitSecond(time) {
@@ -32,12 +32,11 @@ const battle = async (stage, player, monster) => {
   while (player.hp > 0 && monster.hp > 0) {
     console.clear();
     displayStatus(stage, player, monster);
-
     logs.forEach((log) => console.log(log));
 
     console.log(
       chalk.green(
-        `\n1. 공격한다 2. 아무것도 하지않는다. 3. 도망친다(${Math.round(player.runRate * 100 * 10) / 10}%)`,
+        `\n1. 공격한다 2. 강공격(${Math.round(player.criticalRate * 100 * 10) / 10}%) 3. 아무것도 하지않는다. 4. 도망친다(${Math.round(player.runRate * 100 * 10) / 10}%)`,
       ),
     );
     process.stdout.write(chalk.white('당신의 선택은? '));
@@ -45,18 +44,33 @@ const battle = async (stage, player, monster) => {
 
     // 플레이어의 선택에 따라 다음 행동 처리
     switch (choice) {
-      case '1': // 공격
-        player.attack(monster);
-        logs.push(
-          chalk.green(`[${turns}] 플레이어의 일반 공격! ${player.atk} 데미지를 입혔습니다!`),
-        );
+      case '1':
+        // 공격
+        const dmg = player.attack(monster, 0);
+        logs.push(chalk.green(`[${turns}] 플레이어의 일반 공격! ${dmg} 데미지를 입혔습니다!`));
         break;
-      case '2': // 아무것도 안한다
+      case '2':
+        // 강공격
+        if (Math.random() <= player.criticalRate) {
+          // 플레이어의 크리티컬 확률보다 낮으면 성공
+          const dmg = player.attack(monster, 1);
+          logs.push(chalk.green(`[${turns}] 플레이어의 강공격 성공! ${dmg} 데미지를 입혔습니다!`));
+        } else {
+          const dmg = player.attack(monster, -1);
+          logs.push(
+            chalk.green(`[${turns}] 플레이어의 강공격 실패! ${dmg} 데미지를 입혔습니다...`),
+          );
+        }
+        break;
+      case '3':
+        // 아무것도 안한다
         logs.push(chalk.red(`[${turns}] 당신은 몬스터의 위협에 몸이 굳어 그저 가만히 서있었다.`));
         break;
-      case '3': // 도망친다
+      case '4':
+        // 도망친다
         if (Math.random() <= player.runRate) {
           console.log(chalk.green(`몬스터로부터 도망치는 데 성공했습니다!`));
+          player.isRan = true;
           await nextStage(3);
           return; // 도망으로는 스텟이 오르지 않음
         } else {
@@ -69,26 +83,31 @@ const battle = async (stage, player, monster) => {
     }
 
     // 몬스터 공격
-    monster.attack(player);
-    logs.push(chalk.red(`[${turns}] 몬스터의 일반 공격! ${monster.atk} 데미지를 입었습니다!`));
+    if (monster.hp > 0) {
+      if (Math.random() < monster.criticalRate) {
+        const dmg = monster.attack(player, 0);
+        logs.push(chalk.red(`[${turns}] 몬스터의 일반 공격! ${dmg} 데미지를 입었습니다!`));
+      } else {
+        const dmg = monster.attack(player, 1);
+        logs.push(chalk.red(`[${turns}] 몬스터의 강공격! ${dmg} 데미지를 입었습니다!`));
+      }
+    }
 
     ++turns;
 
     if (monster.hp <= 0) {
+      console.clear();
       displayStatus(stage, player, monster);
-      console.log(chalk.green(`플레이어의 승리!`));
-      // hp 회복, 공격력 상승, 도망칠 확률 감소
-      const heal = Math.floor(Math.random() * 100) + 50;
-      const atkincrease = Math.floor(Math.random() * 6) + 3;
-      const rundecrease = Math.round(Math.random() * 5 * 10) / 10 + 1;
-      player.playerClearStage(heal, atkincrease, rundecrease / 100);
+      logs.forEach((log) => console.log(log));
+      console.log(chalk.green(`\n플레이어의 승리!`));
 
-      // 스텟의 변화를 화면에 출력
-      console.log(chalk.green(`HP가 ${heal}만큼 회복되었습니다.`));
-      console.log(chalk.green(`공격력이 ${atkincrease}만큼 상승했습니다.`));
-      console.log(chalk.red(`도망칠 확룰이 ${rundecrease}%만큼 하락했습니다.`));
-      await waitSecond(1.5);
-      await nextStage(3);
+      if (stage < 10) {
+        // 스테이지 클리어에 따른 플레이어 스탯 변화
+        player.playerClearStage();
+
+        await waitSecond(1.5);
+        //await nextStage(3);
+      }
       return;
     }
   }
@@ -110,5 +129,12 @@ export async function startGame() {
     }
 
     stage++;
+  }
+
+  // 승리
+  if (stage >= 10) {
+    console.log(chalk.green(`당신은 던전을 완전 정복하고 용사가 되었습니다!`));
+    if (player.isRan)
+      console.log(chalk.green(`...어쩌면 그저 던전에서 도망쳐 나온 겁쟁이뿐일지도 모르죠`));
   }
 }
