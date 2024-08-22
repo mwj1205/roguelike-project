@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
-import { Player, Monster } from './classes.js';
+import { Player, Monster } from './class.js';
 
 // setTimeout 편하게 쓰기 위한 함수
 function waitSecond(time) {
@@ -28,6 +28,7 @@ function displayStatus(stage, player, monster) {
 const battle = async (stage, player, monster) => {
   let logs = [];
   let turns = 1;
+  let isdefence = false;
 
   while (player.hp > 0 && monster.hp > 0) {
     console.clear();
@@ -36,7 +37,8 @@ const battle = async (stage, player, monster) => {
 
     console.log(
       chalk.green(
-        `\n1. 공격한다 2. 강공격(${Math.round(player.criticalRate * 100 * 10) / 10}%) 3. 아무것도 하지않는다. 4. 도망친다(${Math.round(player.runRate * 100 * 10) / 10}%)`,
+        `\n1. 공격한다    2. 강공격(${Math.round(player.criticalRate * 100 * 10) / 10}%)   3. 방어한다 (${Math.round(player.nowdefRate * 100 * 10) / 10}%)
+4. 아이템 사용 5. 도망친다(${Math.round(player.runRate * 100 * 10) / 10}%) 6. 아무것도 안한다.`,
       ),
     );
     process.stdout.write(chalk.white('당신의 선택은? '));
@@ -63,10 +65,15 @@ const battle = async (stage, player, monster) => {
         }
         break;
       case '3':
-        // 아무것도 안한다
-        logs.push(chalk.red(`[${turns}] 당신은 몬스터의 위협에 몸이 굳어 그저 가만히 서있었다.`));
+        // 방어한다
+        isdefence = player.playerDef();
+        logs.push(chalk.green(`[${turns}] 방어 태세를 취합니다!`));
+        player.nowdefRate /= 2;
         break;
       case '4':
+        // 아이템 사용
+        break;
+      case '5':
         // 도망친다
         if (Math.random() <= player.runRate) {
           console.log(chalk.green(`몬스터로부터 도망치는 데 성공했습니다!`));
@@ -77,6 +84,10 @@ const battle = async (stage, player, monster) => {
           logs.push(chalk.red(`[${turns}] 도망치는 데 실패했습니다!`));
         }
         break;
+      case '6':
+        // 아무것도 안한다.
+        logs.push(chalk.red(`[${turns}] 당신은 몬스터의 위협에 몸이 굳어 그저 가만히 서있었다.`));
+        break;
       default:
         logs.push(chalk.gray(`올바른 값을 선택해 주세요.`));
         continue;
@@ -84,18 +95,33 @@ const battle = async (stage, player, monster) => {
 
     // 몬스터 공격
     if (monster.hp > 0) {
-      if (Math.random() < monster.criticalRate) {
-        const dmg = monster.attack(player, 0);
-        logs.push(chalk.red(`[${turns}] 몬스터의 일반 공격! ${dmg} 데미지를 입었습니다!`));
+      if (isdefence) {
+        logs.push(chalk.green(`[${turns}] 플레이어가 몬스터의 공격을 방어했습니다!`));
+        isdefence = false;
+        if (Math.random() <= player.counterRate) {
+          // 반격 성공
+          const dmg = player.playerCounter(monster);
+          logs.push(chalk.green(`[${turns}] 플레이어가 몬스터에게 반격합니다! ${dmg} 데미지!`));
+        }
       } else {
-        const dmg = monster.attack(player, 1);
-        logs.push(chalk.red(`[${turns}] 몬스터의 강공격! ${dmg} 데미지를 입었습니다!`));
+        if (choice === '3') {
+          logs.push(chalk.red(`[${turns}] 방어를 시도했지만 실패했습니다!`));
+        }
+        if (Math.random() < monster.criticalRate) {
+          const dmg = monster.attack(player, 0);
+          logs.push(chalk.red(`[${turns}] 몬스터의 일반 공격! ${dmg} 데미지를 입었습니다!`));
+        } else {
+          const dmg = monster.attack(player, 1);
+          logs.push(chalk.red(`[${turns}] 몬스터의 강공격! ${dmg} 데미지를 입었습니다!`));
+        }
       }
     }
 
+    if (choice !== '3') player.nowdefRate = player.basedefRate;
     ++turns;
 
     if (monster.hp <= 0) {
+      // 플레이어 승리
       console.clear();
       displayStatus(stage, player, monster);
       logs.forEach((log) => console.log(log));
@@ -109,6 +135,14 @@ const battle = async (stage, player, monster) => {
         //await nextStage(3);
       }
       return;
+    }
+
+    if (player.hp <= 0) {
+      // 플레이어 패배
+      console.clear();
+      displayStatus(stage, player, monster);
+      logs.forEach((log) => console.log(log));
+      console.log(chalk.red(`당신은 패배했다...`));
     }
   }
 };
@@ -124,7 +158,6 @@ export async function startGame() {
 
     // 스테이지 클리어 및 게임 종료 조건
     if (player.hp <= 0) {
-      console.log(chalk.red(`당신은 패배했다...`));
       return;
     }
 
