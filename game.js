@@ -117,6 +117,7 @@ const battle = async (stage, player, monster) => {
     }
 
     if (choice !== '3') player.nowdefRate = player.basedefRate;
+
     ++turns;
 
     if (monster.hp <= 0) {
