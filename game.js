@@ -68,7 +68,6 @@ const battle = async (stage, player, monster) => {
         // 방어한다
         isdefence = player.playerDef();
         logs.push(chalk.green(`[${turns}] 방어 태세를 취합니다!`));
-        player.nowdefRate /= 2;
         break;
       case '4':
         // 아이템 사용

@@ -101,7 +101,9 @@ export class Player extends BaseStat {
   }
 
   playerDef() {
-    return Math.random() <= this._nowdefRate;
+    const isdef = Math.random() <= this._nowdefRate;
+    this.nowdefRate /= 2;
+    return isdef;
   }
 
   playerCounter(target) {
