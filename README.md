@@ -1,10 +1,12 @@
 # roguelike-project
+셀프 코드 리뷰:
+
+[![코드 리뷰](https://github.com/user-attachments/assets/0e839d00-c353-4870-b407-88da9094e24c)](https://velog.io/@mwj1205/JavaScript-%EA%B0%9C%EC%9D%B8-%EA%B3%BC%EC%A0%9C.-text-roguelike-project)
 
 ## 필수 기능 <a id="section2-1"></a>
 ### 첫 화면
 <img src="https://velog.velcdn.com/images/mwj1205/post/012dece0-912f-4c1f-b1c2-d1defbf7764f/image.png" style="display: block; margin: 0; padding: 0;">
 스켈레톤 코드로 주어진 첫 화면이다.
-
 2번 업적과 3번 옵션은 구현되지 않았지만, 따로 빼지는 않았다.
 1을 입력하면 전투 화면으로 넘어갈 수 있다.
 
