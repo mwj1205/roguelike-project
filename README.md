@@ -1,4 +1,6 @@
-### 필수 기능 <a id="section2-1"></a>
+# roguelike-project
+
+## 필수 기능 <a id="section2-1"></a>
 ### 첫 화면
 <img src="https://velog.velcdn.com/images/mwj1205/post/012dece0-912f-4c1f-b1c2-d1defbf7764f/image.png" style="display: block; margin: 0; padding: 0;">
 스켈레톤 코드로 주어진 첫 화면이다.
@@ -32,7 +34,7 @@
 도망치는 데에 실패했다면 몬스터의 턴으로 넘어가 공격을 받게 된다.
 
 
-### 도전 기능 <a id="section2-2"></a>
+## 도전 기능 <a id="section2-2"></a>
 ### 2-강한 공격
 <img src="https://velog.velcdn.com/images/mwj1205/post/4243b971-9521-4a63-9aac-4d65879be749/image.png" style="display: block; margin: 0; padding: 0;">
 2번 강공격을 선택하면 플레이어는 강한 공격을 시도한다.
