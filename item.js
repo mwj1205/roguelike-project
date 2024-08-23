@@ -25,7 +25,7 @@ const itemTable = [
   ),
 
   new Item(
-    '힘의 반지',
+    '원한',
     '공격력을 5 상승시킵니다.',
     (player) => {
       player.atk += 5;
@@ -33,15 +33,15 @@ const itemTable = [
     true,
   ),
 
-  new Item(
-    '가벼운 갑옷',
-    '기본 방어 성공률이 낮아지지만, 더이상 연속 방어에 따른 방어 확률 감소가 적용되지 않습니다.',
-    (player) => {
-      player.basedefRate = 0.45;
-      // 방어 확률 감소 안되는 로직
-    },
-    false,
-  ),
+  // new Item(
+  //   '가벼운 갑옷',
+  //   '기본 방어 성공률이 낮아지지만, 더이상 연속 방어에 따른 방어 확률 감소가 적용되지 않습니다.',
+  //   (player) => {
+  //     player.basedefRate = 0.45;
+  //     // 방어 확률 감소 안되는 로직
+  //   },
+  //   false,
+  // ),
 
   new Item(
     '은신 로브',
@@ -81,3 +81,9 @@ const itemTable = [
     false,
   ),
 ];
+
+export function getRandomItem(num) {
+  const randomItem = [...itemTable];
+  const shuffle = randomItem.sort(() => 0.5 - Math.random());
+  return shuffle.slice(0, num);
+}
