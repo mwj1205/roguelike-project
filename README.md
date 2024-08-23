@@ -4,7 +4,8 @@
 ### 첫 화면
 <img src="https://velog.velcdn.com/images/mwj1205/post/012dece0-912f-4c1f-b1c2-d1defbf7764f/image.png" style="display: block; margin: 0; padding: 0;">
 스켈레톤 코드로 주어진 첫 화면이다.
-
+셀프 코드 리뷰:
+[![코드 리뷰]([http://cfile24.uf.tistory.com/image/2444873B57E257821FA2A](https://github.com/user-attachments/assets/930e0f08-1776-4746-a222-c9333e8a709b)E)]([https://unity3d.com/kr](https://velog.io/@mwj1205/posts))
 2번 업적과 3번 옵션은 구현되지 않았지만, 따로 빼지는 않았다.
 1을 입력하면 전투 화면으로 넘어갈 수 있다.
 
