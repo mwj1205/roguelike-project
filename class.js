@@ -2,9 +2,9 @@ import chalk from 'chalk';
 
 // 몬스터와 플레이어의 부모 클래스
 class BaseStat {
-  constructor(hp, attack, criticalRate, criticalDamage) {
+  constructor(hp, atk, criticalRate, criticalDamage) {
     this._hp = hp;
-    this._atk = attack;
+    this._atk = atk;
     this._criticalRate = criticalRate;
     this._criticalDamage = criticalDamage;
   }
@@ -43,6 +43,11 @@ class BaseStat {
   }
 
   set atk(atk) {
+    if (atk > this._atk) {
+      console.log(chalk.green(`공격력이 ${atk - this._atk}만큼 증가했습니다. 현재 공격력: ${atk}`));
+    } else if (atk < this._atk) {
+      console.log(chalk.red(`공격력이 ${this._atk - atk}만큼 감소했습니다. 현재 공격력: ${atk}`));
+    }
     this._atk = atk;
   }
 
@@ -50,25 +55,60 @@ class BaseStat {
     return this._hp;
   }
 
-  set hp(hp) {
-    if (hp < 0) this._hp = 0;
-    else this._hp = hp;
+  set hp(val) {
+    if (val > this._hp) {
+      console.log(chalk.green(`HP가 ${val - this._hp}만큼 회복되었습니다. 현재 HP: ${val}`));
+    } else if (val < this._hp) {
+      console.log(chalk.red(`HP가 ${this._hp - val}만큼 감소했습니다. 현재 HP: ${val}`));
+    }
+    if (val < 0) this._hp = 0;
+    else this._hp = val;
   }
 
   get criticalRate() {
     return this._criticalRate;
   }
 
-  set criticalRate(crit) {
-    this._criticalRate = crit;
+  set criticalRate(val) {
+    if (val > this._criticalRate) {
+      console.log(
+        chalk.green(
+          `크리티컬 확률이 ${Math.round((val - this._criticalRate) * 100 * 10) / 10}}% 증가했습니다. 현재 크리티컬 확률: ${Math.round(val * 100 * 10) / 10}}%`,
+        ),
+      );
+    } else if (val < this._criticalRate) {
+      console.log(
+        chalk.red(
+          `크리티컬 확률이 ${Math.round((this._criticalRate - val) * 100 * 10) / 10}}% 감소했습니다. 현재 크리티컬 확률: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    }
+    if (val < 0) this._criticalRate = 0;
+    else if (val > 1) this._criticalRate = 1;
+    else this._criticalRate = val;
   }
 
   get criticalDamage() {
     return this._criticalDamage;
   }
 
-  set criticalDamage(critdmg) {
-    this._criticalDamage = critdmg;
+  set criticalDamage(val) {
+    if (val > this._criticalDamage) {
+      console.log(
+        chalk.green(
+          `크리티컬 데미지가 ${Math.round((val - this._criticalRate) * 100 * 10) / 10}}% 증가했습니다. 현재 크리티컬 데미지: ${Math.round(val * 100 * 10) / 10}}%`,
+        ),
+      );
+    } else if (val < this._criticalDamage) {
+      console.log(
+        chalk.red(
+          `크리티컬 데미지가 ${Math.round((this._criticalDamage - val) * 100 * 10) / 10}}% 감소했습니다. 현재 크리티컬 데미지: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    }
+    if (val < 1)
+      this._criticalDamage = 1; // 크리티컬 데미지는 최소 1배
+    else this._criticalDamage = val;
   }
 }
 
@@ -94,10 +134,6 @@ export class Player extends BaseStat {
     this.atk += atkincrease;
     this.runRate -= rundecrease / 100;
     this.nowdefRate = this.basedefRate;
-
-    console.log(chalk.green(`HP가 ${heal}만큼 회복되었습니다.`));
-    console.log(chalk.green(`공격력이 ${atkincrease}만큼 상승했습니다.`));
-    console.log(chalk.red(`도망칠 확룰이 ${rundecrease}%만큼 하락했습니다.`));
   }
 
   playerDef() {
@@ -117,6 +153,19 @@ export class Player extends BaseStat {
   }
 
   set runRate(val) {
+    if (val > this._runRate) {
+      console.log(
+        chalk.green(
+          `도망 성공률이 ${Math.round((val - this._runRate) * 100 * 10) / 10}% 증가했습니다. 현재 도망 성공률: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    } else if (val < this._runRate) {
+      console.log(
+        chalk.red(
+          `도망 성공률이 ${Math.round((this._runRate - val) * 100 * 10) / 10}% 감소했습니다. 현재 도망 성공률: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    }
     if (val < 0) this._runRate = 0;
     else if (val > 1) this._runRate = 1.0;
     else this._runRate = val;
@@ -135,6 +184,19 @@ export class Player extends BaseStat {
   }
 
   set basedefRate(val) {
+    if (val > this._basedefRate) {
+      console.log(
+        chalk.green(
+          `기본 방어 확률이 ${Math.round((val - this._basedefRate) * 100 * 10) / 10}% 증가했습니다. 현재 기본 방어 확률: ${Math.round(rate * 100 * 10) / 10}%`,
+        ),
+      );
+    } else if (val < this._basedefRate) {
+      console.log(
+        chalk.red(
+          `기본 방어 확률이 ${Math.round((this._basedefRate - val) * 100 * 10) / 10}% 감소했습니다. 현재 기본 방어 확률: ${Math.round(rate * 100 * 10) / 10}%`,
+        ),
+      );
+    }
     if (val < 0) this._basedefRate = 0;
     else if (val > 1) this._basedefRate = 1.0;
     else this._basedefRate = val;
@@ -155,6 +217,19 @@ export class Player extends BaseStat {
   }
 
   set counterRate(val) {
+    if (val > this._counterRate) {
+      console.log(
+        chalk.green(
+          `반격 확률이 ${Math.round((val - this._counterRate) * 100 * 10) / 10}% 증가했습니다. 현재 반격 확률: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    } else if (val < this._counterRate) {
+      console.log(
+        chalk.red(
+          `반격 확률이 ${Math.round((this._counterRate - val) * 100 * 10) / 10}% 감소했습니다. 현재 반격 확률: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    }
     if (val < 0) this._counterRate = 0;
     else if (val > 1) this._counterRate = 1.0;
     else this._counterRate = val;
@@ -165,6 +240,19 @@ export class Player extends BaseStat {
   }
 
   set counterDamage(val) {
+    if (val > this._counterDamage) {
+      console.log(
+        chalk.green(
+          `반격 데미지가 ${Math.round((val - this._counterDamage) * 100 * 10) / 10}% 증가했습니다. 현재 반격 데미지: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    } else if (val < this._counterDamage) {
+      console.log(
+        chalk.red(
+          `반격 데미지가 ${Math.round((this._counterDamage - val) * 100 * 10) / 10}% 감소했습니다. 현재 반격 데미지: ${Math.round(val * 100 * 10) / 10}%`,
+        ),
+      );
+    }
     if (val < 0) this._counterDamage = 0;
     else this._counterDamage = val;
   }

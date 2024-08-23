@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
 import { Player, Monster } from './class.js';
+import { getRandomItem } from './item.js';
 
 // setTimeout 편하게 쓰기 위한 함수
 function waitSecond(time) {
@@ -23,6 +24,34 @@ function displayStatus(stage, player, monster) {
       chalk.redBright(`| 몬스터 정보 HP: ${monster.hp}, ATK: ${monster.atk} |`),
   );
   console.log(chalk.magentaBright(`=====================\n`));
+}
+
+// 배틀 종료시 아이템 선택 코드
+async function selectItem(player) {
+  const items = getRandomItem(3);
+
+  while (1) {
+    console.log(chalk.blueBright(`| 플레이어 정보 HP: ${player.hp}, ATK: ${player.atk} |`));
+    console.log(chalk.cyanBright('드롭된 아이템'));
+    items.forEach((item, index) => {
+      console.log(chalk.greenBright(`${index + 1} : ${item._name}`));
+    });
+
+    process.stdout.write(chalk.white('아이템 선택:  '));
+    const choice = readlineSync.question('');
+    const choiceInt = parseInt(choice, 10) - 1;
+
+    console.log(chalk.yellowBright(`선택한 아이템: ${items[choiceInt]._name}`));
+    console.log(chalk.blackBright(`설명: ${items[choiceInt]._description}`));
+
+    process.stdout.write(chalk.white('아이템을 획득하시겠습니까? (y/n): '));
+    const getitem = readlineSync.question('');
+    if (getitem === 'y' || getitem === 'Y') {
+      items[choiceInt].use(player);
+      waitSecond(2);
+      return;
+    }
+  }
 }
 
 const battle = async (stage, player, monster) => {
@@ -71,6 +100,8 @@ const battle = async (stage, player, monster) => {
         break;
       case '4':
         // 아이템 사용
+        logs.push(chalk.green(`[${turns}] 가방이 비어있다.`));
+        continue;
         break;
       case '5':
         // 도망친다
@@ -130,9 +161,9 @@ const battle = async (stage, player, monster) => {
       if (stage < 10) {
         // 스테이지 클리어에 따른 플레이어 스탯 변화
         player.playerClearStage();
-
+        await selectItem(player);
         await waitSecond(1.5);
-        //await nextStage(3);
+        await nextStage(2);
       }
       return;
     }
