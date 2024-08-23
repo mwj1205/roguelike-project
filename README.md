@@ -1,6 +1,7 @@
 # roguelike-project
 셀프 코드 리뷰:
-[![코드 리뷰]([http://cfile24.uf.tistory.com/image/2444873B57E257821FA2A](https://github.com/user-attachments/assets/930e0f08-1776-4746-a222-c9333e8a709b)E)]([https://unity3d.com/kr](https://velog.io/@mwj1205/posts))
+[![코드 리뷰](https://github.com/user-attachments/assets/f5fcd186-44de-41e4-82fb-702b90a1f407)]([https://unity3d.com/kr](https://velog.io/@mwj1205/posts))
+
 ## 필수 기능 <a id="section2-1"></a>
 ### 첫 화면
 <img src="https://velog.velcdn.com/images/mwj1205/post/012dece0-912f-4c1f-b1c2-d1defbf7764f/image.png" style="display: block; margin: 0; padding: 0;">
