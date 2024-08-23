@@ -71,6 +71,7 @@ const battle = async (stage, player, monster) => {
         break;
       case '4':
         // 아이템 사용
+        logs.push(chalk.green(`[${turns}] 가방이 비어있다.`));
         break;
       case '5':
         // 도망친다
