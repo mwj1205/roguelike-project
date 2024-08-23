@@ -259,7 +259,7 @@ export class Player extends BaseStat {
 }
 
 // 몬스터 클래스
-class Monster extends BaseStat {
+export class Monster extends BaseStat {
   constructor(stage) {
     // HP, Atk, Crit은 stage에 따라 랜덤하게 결정됨
     let Hp = 50 + stage * (Math.random() * 30 + 20);
