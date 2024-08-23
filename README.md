@@ -1,7 +1,7 @@
 # roguelike-project
 셀프 코드 리뷰:
 
-[![코드 리뷰](https://github.com/user-attachments/assets/0e839d00-c353-4870-b407-88da9094e24c)](https://velog.io/@mwj1205/posts)
+[![코드 리뷰](https://github.com/user-attachments/assets/0e839d00-c353-4870-b407-88da9094e24c)](https://velog.io/@mwj1205/JavaScript-%EA%B0%9C%EC%9D%B8-%EA%B3%BC%EC%A0%9C.-text-roguelike-project)
 
 ## 필수 기능 <a id="section2-1"></a>
 ### 첫 화면
