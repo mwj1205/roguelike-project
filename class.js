@@ -73,13 +73,13 @@ class BaseStat {
     if (val > this._criticalRate) {
       console.log(
         chalk.green(
-          `크리티컬 확률이 ${Math.round((val - this._criticalRate) * 100 * 10) / 10}}% 증가했습니다. 현재 크리티컬 확률: ${Math.round(val * 100 * 10) / 10}}%`,
+          `크리티컬 확률이 ${Math.round((val - this._criticalRate) * 100 * 10) / 10}% 증가했습니다. 현재 크리티컬 확률: ${Math.round(val * 100 * 10) / 10}%`,
         ),
       );
     } else if (val < this._criticalRate) {
       console.log(
         chalk.red(
-          `크리티컬 확률이 ${Math.round((this._criticalRate - val) * 100 * 10) / 10}}% 감소했습니다. 현재 크리티컬 확률: ${Math.round(val * 100 * 10) / 10}%`,
+          `크리티컬 확률이 ${Math.round((this._criticalRate - val) * 100 * 10) / 10}% 감소했습니다. 현재 크리티컬 확률: ${Math.round(val * 100 * 10) / 10}%`,
         ),
       );
     }
@@ -96,13 +96,13 @@ class BaseStat {
     if (val > this._criticalDamage) {
       console.log(
         chalk.green(
-          `크리티컬 데미지가 ${Math.round((val - this._criticalRate) * 100 * 10) / 10}}% 증가했습니다. 현재 크리티컬 데미지: ${Math.round(val * 100 * 10) / 10}}%`,
+          `크리티컬 데미지가 ${Math.round((val - this._criticalRate) * 100 * 10) / 10}% 증가했습니다. 현재 크리티컬 데미지: ${Math.round(val * 100 * 10) / 10}%`,
         ),
       );
     } else if (val < this._criticalDamage) {
       console.log(
         chalk.red(
-          `크리티컬 데미지가 ${Math.round((this._criticalDamage - val) * 100 * 10) / 10}}% 감소했습니다. 현재 크리티컬 데미지: ${Math.round(val * 100 * 10) / 10}%`,
+          `크리티컬 데미지가 ${Math.round((this._criticalDamage - val) * 100 * 10) / 10}% 감소했습니다. 현재 크리티컬 데미지: ${Math.round(val * 100 * 10) / 10}%`,
         ),
       );
     }
@@ -259,7 +259,7 @@ export class Player extends BaseStat {
 }
 
 // 몬스터 클래스
-export class Monster extends BaseStat {
+class Monster extends BaseStat {
   constructor(stage) {
     // HP, Atk, Crit은 stage에 따라 랜덤하게 결정됨
     let Hp = 50 + stage * (Math.random() * 30 + 20);

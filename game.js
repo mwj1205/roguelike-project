@@ -41,15 +41,18 @@ async function selectItem(player) {
     const choice = readlineSync.question('');
     const choiceInt = parseInt(choice, 10) - 1;
 
-    console.log(chalk.yellowBright(`선택한 아이템: ${items[choiceInt]._name}`));
-    console.log(chalk.blackBright(`설명: ${items[choiceInt]._description}`));
-
-    process.stdout.write(chalk.white('아이템을 획득하시겠습니까? (y/n): '));
-    const getitem = readlineSync.question('');
-    if (getitem === 'y' || getitem === 'Y') {
-      items[choiceInt].use(player);
-      waitSecond(2);
-      return;
+    if (isNaN(choiceInt) || choiceInt < 0 || choiceInt >= items.length) {
+      console.log(chalk.red('올바른 숫자를 입력해주세요.'));
+    } else {
+      console.log(chalk.yellowBright(`선택한 아이템: ${items[choiceInt]._name}`));
+      console.log(chalk.blackBright(`설명: ${items[choiceInt]._description}`));
+      process.stdout.write(chalk.white('아이템을 획득하시겠습니까? (y/n): '));
+      const getitem = readlineSync.question('');
+      if (getitem === 'y' || getitem === 'Y') {
+        items[choiceInt].use(player);
+        waitSecond(2);
+        return;
+      }
     }
   }
 }
