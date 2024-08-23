@@ -72,7 +72,7 @@ const itemTable = [
   ),
 
   new Item(
-    '너무 짧은 단검',
+    '정밀 단도',
     '반격 확률이 크게 감소하지만 반격 데미지가 크게 상승합니다.',
     (player) => {
       player.counterRate -= 0.25;

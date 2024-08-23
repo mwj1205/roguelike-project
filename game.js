@@ -28,8 +28,6 @@ function displayStatus(stage, player, monster) {
 
 // 배틀 종료시 아이템 선택 코드
 async function selectItem(player) {
-  //console.clear();
-
   const items = getRandomItem(3);
 
   while (1) {
@@ -52,8 +50,6 @@ async function selectItem(player) {
       items[choiceInt].use(player);
       waitSecond(2);
       return;
-    } else {
-      continue;
     }
   }
 }
@@ -105,6 +101,7 @@ const battle = async (stage, player, monster) => {
       case '4':
         // 아이템 사용
         logs.push(chalk.green(`[${turns}] 가방이 비어있다.`));
+        continue;
         break;
       case '5':
         // 도망친다
